@@ -16,23 +16,12 @@
     state: absent
 - name: Disable swap
   command: swapoff -a
-- name: Install kubelet
+- name: Install kubelet kubeadm kubectl
   yum:
-    name: kubelet
+    name: "{{ item }}"
     state: installed
     enablerepo: kubernetes
-- name: Install kubeadm
-  yum:
-    name: kubeadm
-    state: installed
-    enablerepo: kubernetes
-- name: Install kubectl
-  yum:
-    name: kubectl
-    state: installed
-    enablerepo: kubernetes
-- name: Stared kubelet
-  systemd:
-    name: kubelet
-    state: restarted
-    enabled: yes
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl

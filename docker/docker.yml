@@ -1,7 +1,7 @@
 - hosts: all
   remote_user: root
   vars:
-    docker_version: "docker-ce-18.06.0.ce"
+    docker_version: "docker-ce-17.03.2.ce"
   tasks:
   - name: Clean Old Docker
     yum:
@@ -9,6 +9,7 @@
       state: removed
     with_items:
       - docker
+      - docker-ce
       - docker-client
       - docker-client-latest
       - docker-common
@@ -18,6 +19,8 @@
       - doccker-selinux
       - docker-engine-selinux
       - docker-engine
+  - name: Remove /var/lib/docker
+    file: path=/var/lib/docker state=absent
   - name: Install docker relevant utils
     yum:
       name: "{{ item }}"
@@ -31,6 +34,11 @@
       url: http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
       dest: /etc/yum.repos.d/docker-ce.repo
       force: yes
+  - name: Temp set yum.conf obsoletes
+    lineinfile:
+      path: /etc/yum.conf
+      regexp: obsoletes=1
+      line: obsoletes=0
   - name: Install Docker CE
     yum:
       name: "{{ docker_version }}"
@@ -40,3 +48,8 @@
       name: docker
       state: started
       enabled: yes
+  - name: Recover yum.conf
+   lineinfile:
+     path: /etc/yum.conf
+     regexp: obsoletes=0
+     line: obsoletes=1
