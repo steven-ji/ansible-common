@@ -1,3 +1,19 @@
+- name: Check Docker Version
+  yum:
+    list: docker-ce
+  register: docker_version_list
+- debug: var=item.version #'msg="{{ item.version }}"'  #msg="Filter Docker Version Info"
+  loop: "{{ docker_version_list.results }}"
+  when: item.version == "18.06.0.ce"
+  register: version
+- debug: 'msg="{{ version.results }}"'
+- name: Install Docker CE
+  yum:
+    name: docker-ce
+    state: installed
+#  ignore_errors: yes
+  register: docker_install
+- debug: 'msg="{{ docker_install }}"'
 - name: Clean Old Docker
   yum:
     name: "{{ item }}"
@@ -28,8 +44,11 @@
     force: yes
 - name: Install Docker CE
   yum:
-    name: "{{ docker_version }}"
+    name: docker-ce
     state: installed
+  ignore_errors: yes
+  register: docker_install
+- debug: 'msg="{{ docker_install }}"'
 - name: Enable And Start Docker
   systemd:
     name: docker

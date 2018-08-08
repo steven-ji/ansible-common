@@ -1,39 +1,42 @@
-- name: uninstall software
-  yum:
-    name: "{{ item }}"
-    state: removed
-  with_items:
-    - docker
-    - docker-client
-    - docker-client-latest
-    - docker-common
-    - docker-latest
-    - docker-latest-logrotate
-    - docker-logrotate
-    - docker-selinux
-    - docker-engine-selinux
-    - docker-engine
-
-- name: install docker relevant utils
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - yum-utils
-    - device-mapper-persistent-data
-    - lvm2
-- name: Add Docker CE repository
-  get_url:
-    url: http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-    dest: /etc/yum.repos.d/docker-ce.repo
-    force: yes
-- name: Install Docker CE
-  yum:
-    name: docker-ce
-    state: present
-    update_cache: yes
-- name: Enable And Star Docker
-  systemd:
-    name: docker
-    state: started
-    enabled: yes
+- hosts: all
+  remote_user: root
+  vars:
+    docker_version: "docker-ce-18.06.0.ce"
+  tasks:
+  - name: Clean Old Docker
+    yum:
+      name: "{{ item }}"
+      state: removed
+    with_items:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - doccker-selinux
+      - docker-engine-selinux
+      - docker-engine
+  - name: Install docker relevant utils
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+  - name: Add Docker CE repository
+    get_url:
+      url: http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      force: yes
+  - name: Install Docker CE
+    yum:
+      name: "{{ docker_version }}"
+      state: installed
+  - name: Enable And Start Docker
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
