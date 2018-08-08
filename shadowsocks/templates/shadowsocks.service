@@ -1,0 +1,13 @@
+[Unit]
+Description=shadowsocks service
+After=network.target
+
+[Service]
+type=simple
+ExecStart=/usr/bin/sslocal -c /etc/shadowsocks.json
+Restart=on-failure
+ExecStop=/bin/kill -s QUIT $MAINPID
+ExecReload=/bin/kill -s HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
