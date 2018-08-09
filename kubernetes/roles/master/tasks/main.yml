@@ -1,15 +1,23 @@
-- name: Add kubernetes.repo
-  template: src=kubernetes.repo dest=/etc/yum.repos.d/
-- name: Install kubelet kubeadm kubectl
-  yum:
-    name: "{{ item }}"
-    state: installed
-    enablerepo: kubernetes
-  with_items:
-    - kubelet
-    - kubeadm
-    - kubectl
 - name: Copy images scripts
   template: src=pull_images.sh dest=/opt
 - name: Pull k8s relevant images
   shell: sh /opt/pull_images.sh
+- name: Create flannet file path
+  file:
+    dest="{{ item }}"
+    state: present
+  with_items:
+  - /etc/cni/net.d/
+  - /run/flannel/
+- name: Copy 10-flannel.conf
+  template: src=10-flannel.conf dest=/etc/cni/net.d
+- name: Copy subnet.env
+  template: src=subnet.env dest=/run/flannel
+- name: Initial master
+  shell: kubeadm init --kubernetes-version=v1.11.2 --pod-network-cidr=10.244.0.0/16
+- name: Create kube admin.conf directory
+  file: dest=/root/.kube state=present
+- name: Copy admin.conf
+  shell: cp -i /etc/kubernetes/admin.conf ~/.kube/config
+- name: Add kubeconfig environment variables
+  shell: echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /etc/profile $ source /etc/profile

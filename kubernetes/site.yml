@@ -2,5 +2,6 @@
   hosts: all
   remote_user: root
   roles:
-    - {role: "master", tags: "master"}
     - {role: "docker", tags: "docker"}
+    - {role: "common", tags: "common"}
+    - {role: "master", tags: "master"}

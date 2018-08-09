@@ -14,3 +14,14 @@
     state: absent
 - name: Disable swap
   command: swapoff -a
+- name: Add kubernetes.repo
+  template: src=kubernetes.repo dest=/etc/yum.repos.d/
+- name: Install kubelet kubeadm kubectl
+  yum:
+    name: "{{ item }}"
+    state: installed
+    enablerepo: kubernetes
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
