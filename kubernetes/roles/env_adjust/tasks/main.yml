@@ -1,0 +1,16 @@
+- name: Temporary Close SELinux
+  selinux:
+    policy: targeted
+    state: disabled
+- name: Permanent Close SELinux
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+- name: Disable swap
+  command: swapoff -a
