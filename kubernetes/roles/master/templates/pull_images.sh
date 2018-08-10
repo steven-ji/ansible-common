@@ -18,3 +18,4 @@ for imageName in ${images[@]} ; do
   docker tag jilingjun1014/$imageName k8s.gcr.io/$imageName
   docker rmi jilingjun1014/$imageName
 done
+
