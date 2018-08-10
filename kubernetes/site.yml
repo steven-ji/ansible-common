@@ -5,3 +5,4 @@
     - {role: "docker", tags: "docker"}
     - {role: "common", tags: "common"}
     - {role: "master", tags: "master"}
+    - {role: "flannel", tags: "flannel"}

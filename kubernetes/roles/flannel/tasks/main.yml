@@ -1,0 +1,13 @@
+- name: Create flannet file path
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+  - /etc/cni/net.d/
+  - /run/flannel/
+- name: Copy 10-flannel.conf
+  template: src=10-flannel.conf dest=/etc/cni/net.d
+- name: Copy subnet.env
+  template: src=subnet.env dest=/run/flannel
+- name: Install flannel
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
