@@ -6,6 +6,9 @@ docker.yml: Install docker-ce.Could specific docker-ce version use variable dock
 docker_login.yml: Use to docker login credential.Should explicit point username by "registry_username" and password by "registry_password".
 + kubernetes
 
++ prometheus
+Include prometheus, alertmanager, blackbox_exporter install.
+Default version set in group_vars/all file.Prometheus version is 2.3.2.Alertmanager version is 0.15.0.Blackbox_exporter version is 0.12.0.
 
 ## Usage
 ### Install docker
@@ -21,4 +24,10 @@ $ ansible-playbook -i hosts -e "registry_username=yourname registry_password=pas
 ### Install shadowsocks+privoxy
 ``` 
 $ ansible-playbook -i hosts shadowsocks/shadowsocks.yml
+```
+### Install prometheus
+```
+# Could point version use variables like prometheus_version,alertmanager_version,blackbox_exporter_version.
+$ cd prometheus
+$ ansible-playbook -i hosts -e "prometheus_version=2.3.2" site.yml
 ```

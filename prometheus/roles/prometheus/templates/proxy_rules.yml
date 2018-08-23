@@ -1,0 +1,25 @@
+groups:
+  - name: machine_heart
+    rules:
+    - alert: 'ssh'
+      expr: probe_success{job="machine_heart"} < 1
+      for: 1m
+      labels:
+      #  severity: critical
+      #  team: 'proxy-team'
+      annotations:
+        summary: "Instance {{ $labels.instance }} down."
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
+        execute: "http://api.yunlifang.cn/api/cloudapi.asp?userid=jiangwei&userstr=598868f35861ff782482da02539cb34b&vpsname={{ $labels.machineName }}&op=reset&action=vpsop"
+
+  - name: machine_report
+    rules:
+    - alert: 'http'
+      expr: probe_success{job="machine_report"} < 1
+      for: 30s
+      labels:
+        severity: ipcheck
+      annotations:
+        summary: "Instance {{ $labels.instance }} down."
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 30 sec."
+ 

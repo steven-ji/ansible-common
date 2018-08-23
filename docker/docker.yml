@@ -49,7 +49,7 @@
       state: started
       enabled: yes
   - name: Recover yum.conf
-   lineinfile:
-     path: /etc/yum.conf
-     regexp: obsoletes=0
-     line: obsoletes=1
+    lineinfile:
+      path: /etc/yum.conf
+      regexp: obsoletes=0
+      line: obsoletes=1

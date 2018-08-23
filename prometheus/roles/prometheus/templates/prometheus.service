@@ -1,0 +1,15 @@
+[Unit]
+Description=prometheus.service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/prometheus-{{ prometheus_version }}/prometheus --config.file=/opt/prometheus-{{ prometheus_version }}/prometheus.yml
+Restart=on-failure
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

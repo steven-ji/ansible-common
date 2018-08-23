@@ -1,0 +1,28 @@
+- name: Install Blackbox_exporter
+  get_url:
+    url: https://github.com/prometheus/blackbox_exporter/releases/download/v{{ blackbox_exporter_version }}/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64.tar.gz
+- name: Check blackbox_exporter dirctory
+  file:
+    dest: /opt/blackbox_exporter-{{ blackbox_exporter_version }}
+    state: directory
+- name: Extract blackbox_exporter tar.gz
+  unarchive:
+    src: /opt/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt/blackbox_exporter-{{ blackbox_exporter_version }}
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+- name: Copy blackbox.yml
+  template:
+    src: blackbox.yml
+    dest: /opt/blackbox_exporter-{{ blackbox_exporter_version }}/blackbox.yml
+- name: Copy blackbox.service
+  template:
+    src: blackbox.service
+    dest: /usr/lib/systemd/system/blackbox.service
+- name: Start blackbox
+  systemd:
+    name: blackbox
+    daemon_reload: yes
+    state: restarted
+    enabled: yes

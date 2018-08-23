@@ -1,0 +1,28 @@
+- name: Install Alertmanager
+  get_url:
+    url: https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+    dest: /opt/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+- name: Check Alertmanager dirctory
+  file:
+    dest: /opt/alertmanager-{{ alertmanager_version }}
+    state: directory
+- name: Extract alertmanager tar.gz
+  unarchive:
+    src: /opt/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+    dest: /opt/alertmanager-{{ alertmanager_version }}
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+- name: Copy alertmanager.yml
+  template:
+    src: alertmanager.yml
+    dest: /opt/alertmanager-{{ alertmanager_version }}/alertmanager.yml
+- name: Copy Alertmanager.service
+  template:
+    src: alertmanager.service
+    dest: /usr/lib/systemd/system
+- name: Start alertmanager
+  systemd:
+    name: alertmanager
+    daemon_reload: yes
+    state: restarted
+    enabled: yes

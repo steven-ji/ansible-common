@@ -2,3 +2,5 @@
 k8s-master-1 ansible_host=116.62.177.233 ansible_port=22
 k8s-master-2 ansible_host=116.62.107.179 ansible_port=22
 k8s-master-3 ansible_host=101.37.174.185 ansible_port=22
+[prometheus]
+prometheus-01 ansible_host=116.62.104.34 ansible_port=22

@@ -1,0 +1,2 @@
+[prometheus]
+prometheus-01 ansible_host=116.62.104.34 ansible_port=22

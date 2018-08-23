@@ -1,0 +1,36 @@
+- name: Install Prometheus
+  get_url: 
+    url: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+    dest: /opt/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+- name: Check prometheus dirctory
+  file:
+    dest: /opt/prometheus-{{ prometheus_version }}
+    state: directory
+- name: Extract prometheus tar.gz
+  unarchive:
+    src: /opt/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+    dest: /opt/prometheus-{{ prometheus_version }}
+#    creates: /opt/prometheus-{{ prometheus_version }}
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+- name: Copy prometheus.yml
+  template: 
+    src: prometheus.yml
+    dest: /opt/prometheus-{{ prometheus_version }}/prometheus.yml
+- name: Copy file_sd_configs file and rule file
+  copy:
+    src: roles/prometheus/templates/{{ item }}
+    dest: /opt/prometheus-{{ prometheus_version }}
+  loop:
+  - machine.json
+  - proxy_rules.yml
+- name: Copy prometheus.service
+  template:
+    src: prometheus.service
+    dest: /usr/lib/systemd/system
+- name: Start prometheus
+  systemd:
+    name: prometheus
+    daemon_reload: yes
+    state: restarted
+    enabled: yes

@@ -1,0 +1,7 @@
+- name: Install relevant common packages
+  yum: 
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - wget

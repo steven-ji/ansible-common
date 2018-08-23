@@ -1,0 +1,39 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.mxhichina.com:25'
+  smtp_from: 'xiaoxiangyoupin@basestonedata.com'
+  smtp_auth_username: 'xiaoxiangyoupin@basestonedata.com'
+  smtp_auth_password: 'Xiaoxiangyoupin1'
+templates:
+  - '/tmp/alert_test.txt'
+route:
+  receiver: 'proxy-team'
+  group_by: ['machine_heart','ssh']
+  group_wait: 10s
+  group_interval: 20m
+  repeat_interval: 10m
+  routes:
+  - receiver: 'test-team'
+    group_by: ['machine_report']
+    group_wait: 10s
+    group_interval: 1m
+    repeat_interval: 2m
+    match_re:
+      severity: ipcheck 
+receivers:
+- name: 'proxy-team'
+  email_configs:
+#  - to: 'jilingjun@basestonedata.com,jiangwe@basestonedata.com'
+  - to: 'jiangwe@basestonedata.com'
+    text: 'yun li fang alert!'
+- name: 'test-team'
+  email_configs:
+  - to: 'jiangwe@basestonedata.com'
+    text: 'yun li fang alert!'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']

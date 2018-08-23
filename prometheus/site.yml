@@ -1,0 +1,9 @@
+- name: Install prometheus
+  hosts: all
+  remote_user: root
+  roles:
+    - {role: "common", tags: "common"}
+    - {role: "prometheus", tags: "prometheus"}
+    - {role: "alertmanager", tags: "alertmanager"}
+    - {role: "blackbox", tags: "blackbox"}
+

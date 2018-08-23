@@ -1,0 +1,15 @@
+[Unit]
+Description=blackbox.service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/blackbox_exporter-{{ blackbox_exporter_version }}/blackbox_exporter --config.file=/opt/blackbox_exporter-{{ blackbox_exporter_version }}/blackbox.yml
+Restart=on-failure
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
