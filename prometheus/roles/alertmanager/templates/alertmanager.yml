@@ -3,7 +3,7 @@ global:
   smtp_smarthost: 'smtp.mxhichina.com:25'
   smtp_from: 'xiaoxiangyoupin@basestonedata.com'
   smtp_auth_username: 'xiaoxiangyoupin@basestonedata.com'
-  smtp_auth_password: 'Xiaoxiangyoupin1'
+  smtp_auth_password: ''
 templates:
   - '/tmp/alert_test.txt'
 route:
